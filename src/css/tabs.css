@@ -1,0 +1,11 @@
+.tabs{
+    border-top: 1px solid #d3d3d3;
+  }
+.tab {
+    background-color: #f5f5f5;
+    border-right: 1px solid #d3d3d3;
+}
+.selected{
+    background-color: #d3d3d3;
+    border-right: 1px solid #d3d3d3;
+}

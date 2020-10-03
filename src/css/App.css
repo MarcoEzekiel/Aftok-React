@@ -1,0 +1,166 @@
+.App {
+  height: 100%;
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* user defined TODO: SASS with template colors */ 
+html {
+  position: relative;
+  height: 100%;
+}
+
+.app-body {
+  height: 100%;
+  margin-bottom: 60px;
+  /*  footer height */
+  margin-top: 100px;
+  /*header height */
+}
+body{
+  height: 100%;
+}
+#root{
+  height:100%;
+}
+
+a {
+  color: hsl(18, 86%, 39%)
+}
+.display-area {
+  position: relative;
+  top: 40px;
+}
+.display-area-bottom-blank{
+  height:20px;
+}
+.page-actions {
+  padding-bottom: 20px;
+}
+.hr {
+  border-bottom: 1px solid #cccccc;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+/* start and stop modals Modal (background) */
+.action-modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 2; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.action-modal-content {
+  background-color: #fefefe;
+  color: #aaaaaa;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.pretty-textarea {
+  border: 3px solid #cccccc;
+  color: #dddddd
+}
+.modal-action {
+  margin-top:5px
+}
+.had-blocker {
+  height:5px;
+  width: 5px;
+  background-color:red;
+}
+.no-blocker {
+  height:5px;
+  width: 5px;
+  background-color:green;
+}
+
+.graphDate{
+  position:relative;
+  top: 35px;
+  left: 5px;
+}
+.graphDataHrs{
+  position: relative;
+  top: 17px;
+  left: 5px;
+  color:blue;
+  font-size: 12px;
+}
+.hidden-hover{
+  display: none;
+  z-index: 100; /* Sit on top */
+  border: solid 1px black;
+  background-color: white;
+  border-radius: 2.0px 2.0px 2.0px 2.0px ;
+  max-width:400px
+}
+.display-as-table-row{
+  display: table-row;
+}
+
+.months-row{
+  padding: 5px 0 10px 15px;
+}
+
+.page-header{
+  padding-bottom:14px
+}
+
+.contribution-overview{
+  padding-bottom:10px
+}
+
+
