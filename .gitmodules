@@ -1,0 +1,3 @@
+[submodule "aftok.com"]
+	path = staticsite
+	url = git@github.com:aftok/aftok.com.git
