@@ -13,11 +13,11 @@ import './css/App.css';
 const App = () =>{
 
   const [pageFocus, setPagefocus] = useState({
-        login:true,
+        login:false,
         projects:false,
         tracker:false,
         revenue:false,
-        auctions:false
+        auctions:true
     })
 
 
