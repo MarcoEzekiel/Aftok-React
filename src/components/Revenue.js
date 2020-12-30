@@ -1,7 +1,7 @@
 // src/Revenue.js
 
 import React from 'react'
-import  '../css/tabs.css';
+import  '../css/revenue.css';
 
 const Revenue = () =>{
 
@@ -83,7 +83,7 @@ const Revenue = () =>{
                         some guid
                     </div>
                     <div className="col-md-2">
-                        <a href="">Distribution</a>
+                        <button>Distribution</button>
                     </div>
                 </div>
                 <div className="row pt-3 pb-2">
@@ -99,7 +99,7 @@ const Revenue = () =>{
                         some guid
                     </div>
                     <div className="col-md-2">
-                        <a href="">Distribution</a>
+                        <button>Distribution</button>
                     </div>
                 </div>
                 <div className="row pt-3 pb-2 stripe">
@@ -115,7 +115,7 @@ const Revenue = () =>{
                         some guid
                     </div>
                     <div className="col-md-2">
-                        <a href="">Distribution</a>
+                        <button>Distribution</button>
                     </div>
                 </div>
             </section>

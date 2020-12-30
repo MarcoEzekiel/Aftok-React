@@ -11,13 +11,25 @@ import Auctions from './components/Auctions';
 import './css/App.css';
 
 const App = () =>{
+  var cookie = Document.cookie
+  console.log(cookie)
+  const [loggedIn, setLoggedinState] = useState({
+    loggedIn:false
+  })
+  const handleLoggedinState = (bool) =>{
+    var loggedinState={
+      loggedIn:true
+    }
+    setLoggedinState(loggedinState)
+  }
+
 
   const [pageFocus, setPagefocus] = useState({
-        login:false,
+        login:true,
         projects:false,
         tracker:false,
         revenue:false,
-        auctions:true
+        auctions:false
     })
 
 
@@ -80,7 +92,7 @@ const App = () =>{
 
   const getPage = () =>{  
     if (pageFocus.login){
-      return <Login />;
+      return <Login state={pageFocus} onClickHandler={handlePageFocus} loggedIn={loggedIn} loggedInHandler={handleLoggedinState}/>;
     }else if (pageFocus.projects){
       return <Projects />;
     }else if (pageFocus.revenue){
@@ -96,7 +108,7 @@ const App = () =>{
     <div className="App">
       <Header />
       <div className="app-body">
-        <Tabs state={pageFocus} onClickHandler={handlePageFocus}/>
+        <Tabs state={pageFocus} onClickHandler={handlePageFocus} loggedIn={loggedIn}/>
         {getPage()}
       </div>
       <Footer /> 
