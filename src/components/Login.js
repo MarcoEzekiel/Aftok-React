@@ -19,7 +19,7 @@ class Login extends React.Component {
 
     handleSubmit(event) {
   
-        const apiUrl = "https://172.21.0.3/api/login"
+        const apiUrl = "/api/login"
         let  body = {username:this.state.username, password:this.state.password}
 
         fetch(apiUrl, {

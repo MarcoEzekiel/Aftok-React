@@ -74,7 +74,7 @@ class Tracker extends React.Component {
     
     startWorkHandler(event){
 
-        const apiUrl = "https://172.21.0.3/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
+        const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
         let  body = {schemaVersion: "2.0"}
 
         fetch(apiUrl, {
@@ -104,7 +104,7 @@ class Tracker extends React.Component {
 
 
     stopWorkHandler(event){
-        const apiUrl = "https://172.21.0.3/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
+        const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
         let  body = {schemaVersion: "2.0"}
 
         fetch(apiUrl, {
@@ -135,7 +135,7 @@ class Tracker extends React.Component {
 
     getProjects() {
        
-        const apiUrl = "https://172.21.0.3/api/projects" 
+        const apiUrl = "/api/projects" 
         fetch(apiUrl, {
             method: 'GET',
             headers: {'Content-Type': 'text/application'},
@@ -161,7 +161,7 @@ class Tracker extends React.Component {
 
     getWorkIndex() {
        
-        const apiUrl = "https://172.21.0.3/api/projects/091be765-7493-426f-8203-be611ab3ea13/workIndex?limit=100&before=" + this.isoNow()
+        const apiUrl = "/api/projects/091be765-7493-426f-8203-be611ab3ea13/workIndex?limit=100&before=" + this.isoNow()
 
         fetch(apiUrl, {
             method: 'GET',
