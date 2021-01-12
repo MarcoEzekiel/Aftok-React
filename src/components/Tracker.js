@@ -6,11 +6,13 @@ import React from 'react'
 import IntervalsHarness from "../IntervalsHarness"
 import moment from 'moment'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
-
+import interact from 'interactjs'
 import AuctionHarness from "../AuctionsHarness"
 
 const localizer = momentLocalizer(moment)
 let allViews = Object.keys(Views).map(k => Views[k])
+
+
 
 class Tracker extends React.Component {
 
@@ -35,13 +37,76 @@ class Tracker extends React.Component {
                 '#ff4534',
                 '#ff7c16',
                 '#ffa600'],
-            totalHours: []
+            colorsOffset: ['#0000aa',
+                '#72009e',
+                '#aa0099',
+                '#dd0074',
+                '#dd0052',
+                '#dd4534',
+                '#dd7c16',
+                '#dda600'],
+            totalHours: [],
+            intervalsInitialWidth: 0,
+            days: []
         };
         this.getWorkIndex = this.getWorkIndex.bind(this);
         this.getProjects = this.getProjects.bind(this);
         this.startWorkHandler = this.startWorkHandler.bind(this);
         this.stopWorkHandler = this.stopWorkHandler.bind(this);
         this.buildIntervals = this.buildIntervals.bind(this);
+
+        interact('.resize-drag')
+            .resizable({
+                // resize from all edges and corners
+                edges: { left: true, right: true, bottom: true, top: true },
+
+                listeners: {
+                    move(event) {
+                        var target = event.target
+                        var x = (parseFloat(target.getAttribute('data-x')) || 0)
+                        var y = (parseFloat(target.getAttribute('data-y')) || 0)
+
+                        // update the element's style
+                        target.style.width = event.rect.width + 'px'
+                        target.style.height = event.rect.height + 'px'
+
+                        // translate when resizing from top or left edges
+                        x += event.deltaRect.left
+                        y += event.deltaRect.top
+
+                        target.style.webkitTransform = target.style.transform =
+                            'translate(' + x + 'px,' + y + 'px)'
+
+                        target.setAttribute('data-x', x)
+                        target.setAttribute('data-y', y)
+                        target.textContent = Math.round(event.rect.width) + '\u00D7' + Math.round(event.rect.height)
+                    }
+                },
+                modifiers: [
+                    // keep the edges inside the parent
+                    interact.modifiers.restrictEdges({
+                        outer: 'parent'
+                    }),
+
+                    // minimum size
+                    interact.modifiers.restrictSize({
+                        min: { width: 1, height: 20 },
+                        max: { width: 2000, height: 20 }
+                    })
+                ],
+
+                inertia: true
+            })
+            .draggable({
+                listeners: { move: window.dragMoveListener },
+                inertia: true,
+                modifiers: [
+                    interact.modifiers.restrictRect({
+                        restriction: 'parent',
+                        endOnly: true
+                    })
+                ]
+            })
     }
 
 
@@ -71,11 +136,11 @@ class Tracker extends React.Component {
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
     }
-    
-    startWorkHandler(event){
+
+    startWorkHandler(event) {
 
         const apiUrl = "https://172.21.0.3/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
-        let  body = {schemaVersion: "2.0"}
+        let body = { schemaVersion: "2.0" }
 
         fetch(apiUrl, {
             body: JSON.stringify(body),
@@ -103,9 +168,9 @@ class Tracker extends React.Component {
     }
 
 
-    stopWorkHandler(event){
+    stopWorkHandler(event) {
         const apiUrl = "https://172.21.0.3/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
-        let  body = {schemaVersion: "2.0"}
+        let body = { schemaVersion: "2.0" }
 
         fetch(apiUrl, {
             body: JSON.stringify(body),
@@ -134,19 +199,19 @@ class Tracker extends React.Component {
 
 
     getProjects() {
-       
-        const apiUrl = "https://172.21.0.3/api/projects" 
+
+        const apiUrl = "https://172.21.0.3/api/projects"
         fetch(apiUrl, {
             method: 'GET',
-            headers: {'Content-Type': 'text/application'},
+            headers: { 'Content-Type': 'text/application' },
             credentials: 'include',
             cache: 'default'
-        },this)
+        }, this)
             .then(res => res.json())
             .then(
                 (result) => {
                     console.log(result);
-                },this,
+                }, this,
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
                 // exceptions from actual bugs in components.
@@ -160,20 +225,20 @@ class Tracker extends React.Component {
     }
 
     getWorkIndex() {
-       
+
         const apiUrl = "https://172.21.0.3/api/projects/091be765-7493-426f-8203-be611ab3ea13/workIndex?limit=100&before=" + this.isoNow()
 
         fetch(apiUrl, {
             method: 'GET',
-            headers: {'Content-Type': 'text/application'},
+            headers: { 'Content-Type': 'text/application' },
             credentials: 'include',
             cache: 'default'
-        },this)
+        }, this)
             .then(res => res.json())
             .then(
                 (result) => {
-                    this.buildIntervals(result,true)
-                },this,
+                    this.buildIntervals(result, true)
+                }, this,
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
                 // exceptions from actual bugs in components.
@@ -189,8 +254,24 @@ class Tracker extends React.Component {
 
     componentDidMount() {
 
-        this.getWorkIndex()
+        function percentage(partialValue, totalValue) {
+            return (100 * partialValue) / totalValue;
+        }
+        let twohrstime = 120;
+        let perc = percentage(twohrstime, (24 * 60))
 
+        let startTimePercentage = percentage((8 * 60), 24 * 60)
+
+
+        let box = document.querySelector('#timelines');
+        let width = box.offsetWidth;
+        console.log(width)
+        this.setState({ intervalsInitialWidth: width })
+
+
+        let hourSize = width / 24
+        this.getWorkIndex();
+       
         /** 
         const RSS_URL = `https://electriccoin.co/blog/feed/`;
 
@@ -208,16 +289,21 @@ class Tracker extends React.Component {
 
     }
     auctionSideDiv() {
-        console.log(AuctionHarness.PendingHarness)
+      //  console.log(AuctionHarness.PendingHarness)
     }
-   
-    buildIntervals(result,isLoaded) {
+
+    buildIntervals(result, isLoaded) {
         var groups = []
         var startTime = Date.now()
-        var hours =  []
-        var events= []
+        var hours = []
+        var events = []
         var totalHours = []
         let toLoop = [result]
+        let days = [];
+        let index = "";
+        let day = "";
+
+
         console.log(result)
         toLoop.forEach(function (contributer) {
 
@@ -228,26 +314,117 @@ class Tracker extends React.Component {
                 let creditTo = c.creditTo.creditToUser + ' ' + c.creditTo.schemaVersion
                 let group = { id: id, title: creditTo }
 
-                
+
                 groups.push(group);
 
                 c.intervals.forEach(function (c, i, a) {
 
                     startTime = Math.min(startTime, new Date(c.start))
-                    
+                    // start date
+                    let mmt = moment(new Date(c.start));
+                    //  start date at midnight
+                    let mmtMidnight = mmt.clone().startOf('day');
+                    // Difference in minutes
+                    let diffMinutes = mmt.diff(mmtMidnight, 'minutes');
 
-                    let titleNum = (new Date(c.end) - new Date(c.start)) / (1000 * (60 * 60))
+                    let eventLenInHrs = (new Date(c.end) - new Date(c.start)) / (1000 * (60 * 60))
+                    let title = eventLenInHrs.toFixed(2) + " Hrs. ";
+                    let endOfEventOrDay= moment(new Date(c.end));
+                    let startOfEventOrDay=moment(new Date(c.start))
+                    // get from server
+                    let eventId = this.uuidv4.toString
+                    let event2;
+                    let color = this.state.colors[id - 1]
 
-                    let title = titleNum.toFixed(2) + " Hrs. ";
+
+                    index = days.findIndex((element) => element.day === c.start.substring(0, 10).replace(/-/g,''));
+
+                    // if day goes till 2morrow
+                    if(moment(new Date(c.start)).format('DD')!==moment(new Date(c.end)).format('DD')){
+                        eventLenInHrs = (new Date(c.end).setHours(0,0,0,0) - new Date(c.start)) / (1000 * (60 * 60))
+                        endOfEventOrDay=moment(new Date(c.start)).endOf('day');
+                        startOfEventOrDay=moment(new Date(c.start)).startOf('day');
+                        color = this.state.colorsOffset[id - 1]
+                        let calcLen = (new Date(c.end) - new Date(c.end).setHours(0,0,0,0)) / (1000 * (60 * 60))
+                        event2 = {
+                            'title': title,
+                            'allDay': false,
+                            'start': moment(new Date(c.end)).startOf('day'),
+                            'end': moment(new Date(c.end)), // 2.00 PM 
+                            'color': color,
+                            'lengthAsPercentageOfDay': (calcLen / 24 * 100).toFixed(2),
+                            'startTimeAsPercentageOfDay': 0,
+                            'id' :eventId
+                        }
+                        let overflowArray = new Array;
+                        overflowArray.push(event2)
+
+                        if((days.findIndex((element) => element.day === c.end.substring(0, 10).replace(/-/g,'')) === -1)
+                        ){
+                            console.log(day)
+                            day = c.start.substring(0, 10).replace(/-/g,'')
+                            days.push({ day: day, intervals: overflowArray })
+                        }
+                        else{
+                            console.log('boo')
+                           let intervals=new Array;
+                           let indexNextDay = days.findIndex((element) => element.day === c.start.substring(0, 10).replace(/-/g,''));
+                           index = days.findIndex((element) => element.day === c.end.substring(0, 10).replace(/-/g,''));
+                           console.log(days[indexNextDay])
+                           intervals.push(days[indexNextDay].intervals)
+                           day = c.end.substring(0, 10).replace(/-/g,'')
+                           /** 
+                           let event = {
+                            'title': title,
+                            'allDay': false,
+                            'start': startOfEventOrDay, // 10.00 AM
+                            'end': endOfEventOrDay, // 2.00 PM 
+                            'color': color,
+                            'lengthAsPercentageOfDay': (eventLenInHrs / 24 * 100).toFixed(2),
+                            'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
+                            'id' :eventId
+                            }
+                           intervals.push(event)
+                           day = c.start.substring(0, 10).replace(/-/g,'')
+                           let newDay = { day: day, intervals: intervals }
+                           days.push(newDay)
+                           days.splice(indexNextDay,1)
+                           */
+                        }
+                    }
+
                     let event = {
                         'title': title,
                         'allDay': false,
-                        'start': moment(new Date(c.start)), // 10.00 AM
-                        'end': moment(new Date(c.end)), // 2.00 PM 
-                        'color': this.state.colors[id - 1]
+                        'start': startOfEventOrDay, // 10.00 AM
+                        'end': endOfEventOrDay, // 2.00 PM 
+                        'color': color,
+                        'lengthAsPercentageOfDay': (eventLenInHrs / 24 * 100).toFixed(2),
+                        'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
+                        'id' :eventId
                     }
-                    
+
                     events.push(event)
+
+                    //day = c.start.substring(0, 10).replace(/-/g,'')
+         
+                    let initArray = new Array;
+                    initArray.push(event)
+                    if (index === -1 ){
+                        days.push({ day: day, intervals: initArray })
+                    }else{
+                       let intervals=new Array;
+                       intervals.push(days[index].intervals[0])
+                       intervals.push(event)
+                       let newDay = { day: day, intervals: intervals }
+                       days.push(newDay)
+                       //console.log(days[index])
+                       days.splice(index,1)
+                       //console.log(days.length)
+                    }
+                   
+
+                    //days.pushIfNotExist(c.start.substring(0, 10),days.inArray(c.start.substring(0, 10)))
 
                     var start = moment(new Date(c.start));
                     var end = moment(new Date(c.end));
@@ -331,23 +508,25 @@ class Tracker extends React.Component {
         }, this);
 
         this.getProjects();
-
         // set state here
-        this.setState({ 
+       // console.log(days)
+        days.sort(function(a, b){return a.day - b.day}).reverse();
+        this.setState({
             groups: groups,
             startTime: startTime,
             events: events,
             totalHours: totalHours,
             hrs: hours,
             intervals: [result],
-            isLoaded: true
-        })    
+            isLoaded: true,
+            days: days
+        })
     }
 
     render() {
 
-        console.log(this.state)
-        console.log(Date.now() - this.state.startTime)
+        //console.log(this.state)
+        //console.log(Date.now() - this.state.startTime)
 
         const pendingAuctions = Object.entries(AuctionHarness.PendingHarness).map((key, i) => {
             return (
@@ -375,6 +554,7 @@ class Tracker extends React.Component {
                             <span className="float-left">Vote Closes: {moment(key[1].voteCloses).format("MMM Do YY")}</span>
                         </div>
                     </div>
+              
                 </div>
             );
         });
@@ -394,9 +574,81 @@ class Tracker extends React.Component {
             );
         });
 
+        /**
+         * <div className="resize-drag" >
+                        1
+                    </div>
+         */
+        const timelines = this.state.days.map((key, i) => {
+            
+            let timelineIntervals = [];
+
+            key.intervals.forEach(element => {
+                //console.log(element);
+                timelineIntervals.push(<div className="resize-drag" 
+                                            style={{left : element.startTimeAsPercentageOfDay+'%' , width: element.lengthAsPercentageOfDay+'%', backgroundColor: element.color}}>
+                                                {element.start.format('DD, h:mm:ss a')} { element.end.format('DD, h:mm:ss a')} {element.id}
+                                        </div>)
+            });
+            return (
+                <div className="row timeline" key={this.uuidv4()}>
+                    <div className="timelineDate">{key.day}</div>{timelineIntervals}
+                </div>
+
+            );
+
+        });
+        
+        /**
+         * 
+         * 
+         *  <div className="resize-drag" style={'left:'+interval.startTimeAsPercentageOfDay+'%; width:'+interval.lengthAsPercentageOfDay+'%; + background-color:'+interval.color+';'}>
+                    1
+                </div>
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         * 
+         *  <div className="row" key={this.uuidv4()}>
+                  <div className="col-md-2">
+  
+                  </div>
+                  <div className="col-md-8" id="timelines">
+                      
+                      <div className="row timeline">
+                          <div className="resize-drag" id="interval_1">
+                              1
+                          </div>
+                      </div>
+                  </div>
+  
+                  <div className="col-md-2">
+  
+                  </div>
+              </div>
+         */
         return (
 
             <div className="container-fluid">
+
+
+                <div className="row" key={this.uuidv4()}>
+                    <div className="col-md-2">
+
+                    </div>
+                    <div className="col-md-8" id="timelines">
+                        {timelines}
+                    </div>
+                    <div className="col-md-2">
+
+                    </div>
+                </div>
+
                 <div className="row">
                     <div className="col-md-2">
 
@@ -426,7 +678,7 @@ class Tracker extends React.Component {
                                     </div>
                                     <div className="row pt-6">
                                         <div className="col-md-2">
-                                            <button id="startWork" className={ this.state.workStarted === false ? "btn btn-primary float-left my-2":"btn btn-primary float-left my-2 btn-disable"} onClick={this.startWorkHandler}>Start Work</button>
+                                            <button id="startWork" className={this.state.workStarted === false ? "btn btn-primary float-left my-2" : "btn btn-primary float-left my-2 btn-disable"} onClick={this.startWorkHandler}>Start Work</button>
                                             {/* to do make component*/}
                                             <div id="startModal" className="action-modal">
                                                 <div className="action-modal-content container">
@@ -449,7 +701,7 @@ class Tracker extends React.Component {
                                         </div>
                                         <div className="col-md-10">
 
-                                            <button id="stopWork" className={ this.state.workStarted === false ? "btn btn-primary float-right my-2 btn-disable":"btn btn-primary float-right my-2"} onClick={this.stopWorkHandler}>Stop Work</button>
+                                            <button id="stopWork" className={this.state.workStarted === false ? "btn btn-primary float-right my-2 btn-disable" : "btn btn-primary float-right my-2"} onClick={this.stopWorkHandler}>Stop Work</button>
                                         </div>
                                         <div id="stopModal" className="action-modal">
                                             <div className="action-modal-content container">
