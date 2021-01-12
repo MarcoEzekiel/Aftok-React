@@ -580,16 +580,16 @@ class Tracker extends React.Component {
                     </div>
          */
         const timelines = this.state.days.map((key, i) => {
-            
+            console.log(this)
             let timelineIntervals = [];
 
             key.intervals.forEach(element => {
-                //console.log(element);
-                timelineIntervals.push(<div className="resize-drag" 
+                
+                timelineIntervals.push(<div class="resize-drag" 
                                             style={{left : element.startTimeAsPercentageOfDay+'%' , width: element.lengthAsPercentageOfDay+'%', backgroundColor: element.color}}>
                                                 {element.start.format('DD, h:mm:ss a')} { element.end.format('DD, h:mm:ss a')} {element.id}
                                         </div>)
-            });
+            },this);
             return (
                 <div className="row timeline" key={this.uuidv4()}>
                     <div className="timelineDate">{key.day}</div>{timelineIntervals}
@@ -597,7 +597,7 @@ class Tracker extends React.Component {
 
             );
 
-        });
+        },this);
         
         /**
          * 
@@ -635,7 +635,6 @@ class Tracker extends React.Component {
         return (
 
             <div className="container-fluid">
-
 
                 <div className="row" key={this.uuidv4()}>
                     <div className="col-md-2">
