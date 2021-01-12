@@ -341,6 +341,7 @@ class Tracker extends React.Component {
 
                     // if day goes till 2morrow
                     if(moment(new Date(c.start)).format('DD')!==moment(new Date(c.end)).format('DD')){
+                        console.log("event exends past midnight")
                         eventLenInHrs = (new Date(c.end).setHours(0,0,0,0) - new Date(c.start)) / (1000 * (60 * 60))
                         endOfEventOrDay=moment(new Date(c.start)).endOf('day');
                         startOfEventOrDay=moment(new Date(c.start)).startOf('day');
@@ -362,8 +363,11 @@ class Tracker extends React.Component {
                         if((days.findIndex((element) => element.day === c.end.substring(0, 10).replace(/-/g,'')) === -1)
                         ){
                             console.log(day)
-                            day = c.start.substring(0, 10).replace(/-/g,'')
-                            days.push({ day: day, intervals: overflowArray })
+                            day = c.end.substring(0, 10).replace(/-/g,'')
+                            
+                            days.push({ day: c.start.substring(0, 10).replace(/-/g,''), intervals: overflowArray })
+
+                            
                         }
                         else{
                             console.log('boo')
@@ -574,13 +578,9 @@ class Tracker extends React.Component {
             );
         });
 
-        /**
-         * <div className="resize-drag" >
-                        1
-                    </div>
-         */
+       
         const timelines = this.state.days.map((key, i) => {
-            console.log(this)
+
             let timelineIntervals = [];
 
             key.intervals.forEach(element => {
@@ -590,6 +590,7 @@ class Tracker extends React.Component {
                                                 {element.start.format('DD, h:mm:ss a')} { element.end.format('DD, h:mm:ss a')} {element.id}
                                         </div>)
             },this);
+
             return (
                 <div className="row timeline" key={this.uuidv4()}>
                     <div className="timelineDate">{key.day}</div>{timelineIntervals}
@@ -599,39 +600,7 @@ class Tracker extends React.Component {
 
         },this);
         
-        /**
-         * 
-         * 
-         *  <div className="resize-drag" style={'left:'+interval.startTimeAsPercentageOfDay+'%; width:'+interval.lengthAsPercentageOfDay+'%; + background-color:'+interval.color+';'}>
-                    1
-                </div>
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         * 
-         *  <div className="row" key={this.uuidv4()}>
-                  <div className="col-md-2">
-  
-                  </div>
-                  <div className="col-md-8" id="timelines">
-                      
-                      <div className="row timeline">
-                          <div className="resize-drag" id="interval_1">
-                              1
-                          </div>
-                      </div>
-                  </div>
-  
-                  <div className="col-md-2">
-  
-                  </div>
-              </div>
-         */
+        
         return (
 
             <div className="container-fluid">
