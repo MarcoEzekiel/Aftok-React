@@ -302,6 +302,7 @@ class Tracker extends React.Component {
         let days = [];
         let index = "";
         let day = "";
+        let intervals;
 
 
         console.log(result)
@@ -314,12 +315,13 @@ class Tracker extends React.Component {
                 let creditTo = c.creditTo.creditToUser + ' ' + c.creditTo.schemaVersion
                 let group = { id: id, title: creditTo }
 
-
                 groups.push(group);
 
                 c.intervals.forEach(function (c, i, a) {
 
                     startTime = Math.min(startTime, new Date(c.start))
+
+                    // from the start of the event till midnight
                     // start date
                     let mmt = moment(new Date(c.start));
                     //  start date at midnight
@@ -334,51 +336,120 @@ class Tracker extends React.Component {
                     // get from server
                     let eventId = this.uuidv4.toString
                     let event2;
-                    let color = this.state.colors[id - 1]
+                    let event1;
+                    let color;
+                    let calcLen;
 
-
-                    index = days.findIndex((element) => element.day === c.start.substring(0, 10).replace(/-/g,''));
-
-                    // if day goes till 2morrow
-                    if(moment(new Date(c.start)).format('DD')!==moment(new Date(c.end)).format('DD')){
-                        console.log("event exends past midnight")
-                        eventLenInHrs = (new Date(c.end).setHours(0,0,0,0) - new Date(c.start)) / (1000 * (60 * 60))
-                        endOfEventOrDay=moment(new Date(c.start)).endOf('day');
-                        startOfEventOrDay=moment(new Date(c.start)).startOf('day');
+                    // if event spans days
+                    if(moment(new Date(c.start)).format('DD')!== moment(new Date(c.end)).format('DD')){
+                        //console.log("event exends past midnight")
+                        // use array @ id for this user offset visualy groups events extending past 24 hrs
                         color = this.state.colorsOffset[id - 1]
-                        let calcLen = (new Date(c.end) - new Date(c.end).setHours(0,0,0,0)) / (1000 * (60 * 60))
+                        
+                        // 1st half of event
+                        // helps calculate length as percentage of day
+                        calcLen = (new Date(c.start).setHours(23,59,59,59) -  new Date(c.start)) / (1000 * (60 * 60))
+                        event1 = {
+                            'title': title,
+                            'allDay': false,
+                            'start': startOfEventOrDay,
+                            'end': endOfEventOrDay, // 2.00 PM 
+                            'color': color,
+                            'lengthAsPercentageOfDay': (calcLen / 24 * 100).toFixed(2),
+                            'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
+                            'id' :eventId
+                        }
+                        // put into array
+                        intervals = new Array;
+                        intervals.push(event1)
+                        // c. start is ist day
+                        console.log(c.start)
+                        console.log(c.end)
+
+                        day = moment(new Date(c.start)).format('YYYYMMDD')
+
+                        console.log(day)
+                        console.log(intervals)
+
+                        // if the day doesn't exist add it to the days array
+                        if((days.findIndex((element) => element.day === day) === -1)
+                        ){    
+                            console.log('1st event day exists')
+                            console.log(day);
+                            console.log(intervals);
+
+                            days.push({ day: day, intervals: intervals })
+                        }
+                        else{
+                            // else get the existing day and add event to its array
+                            console.log('1st event a new day')
+                            console.log(day);
+                            intervals=new Array;
+                            index = days.findIndex((element) => element.day === day);
+
+                            intervals.push(days[index].intervals[0])
+                            intervals.push(event1)
+                            let newDay = { day: day, intervals: intervals }
+                            days.push(newDay)
+                            //delete the original as it has been cloned and added
+                            days.splice(index,1)
+                         }
+                        // end first half of event
+
+
+                        // 2nd half of event
+                        // helps calculate length as percentage of day
+                        calcLen = (new Date(c.end) - new Date(c.end).setHours(0,0,0,0)) / (1000 * (60 * 60))   
+                        
                         event2 = {
                             'title': title,
                             'allDay': false,
-                            'start': moment(new Date(c.end)).startOf('day'),
-                            'end': moment(new Date(c.end)), // 2.00 PM 
+                            'start': startOfEventOrDay,
+                            'end': endOfEventOrDay, // 2.00 PM 
                             'color': color,
                             'lengthAsPercentageOfDay': (calcLen / 24 * 100).toFixed(2),
                             'startTimeAsPercentageOfDay': 0,
                             'id' :eventId
                         }
-                        let overflowArray = new Array;
-                        overflowArray.push(event2)
-
-                        if((days.findIndex((element) => element.day === c.end.substring(0, 10).replace(/-/g,'')) === -1)
-                        ){
-                            console.log(day)
-                            day = c.end.substring(0, 10).replace(/-/g,'')
-                            
-                            days.push({ day: c.start.substring(0, 10).replace(/-/g,''), intervals: overflowArray })
-
-                            
+                        // put into array
+                        intervals = new Array;
+                        intervals.push(event2)
+                        // c. end is 2nd day
+                        console.log(c.end)
+                        day = moment(new Date(c.end)).format('YYYYMMDD')
+                        console.log(day)
+                        // if the day doesn't exist add it to the days array
+                        if((days.findIndex((element) => element.day === day) === -1)
+                        ){    
+                            console.log('2nd event day exists')
+                            console.log(day);
+                            console.log(intervals);
+                            days.push({ day: day, intervals: intervals })
                         }
                         else{
-                            console.log('boo')
-                           let intervals=new Array;
-                           let indexNextDay = days.findIndex((element) => element.day === c.start.substring(0, 10).replace(/-/g,''));
-                           index = days.findIndex((element) => element.day === c.end.substring(0, 10).replace(/-/g,''));
-                           console.log(days[indexNextDay])
-                           intervals.push(days[indexNextDay].intervals)
-                           day = c.end.substring(0, 10).replace(/-/g,'')
-                           /** 
-                           let event = {
+                            // else get the existing day and add event to its array
+
+                            console.log('2nd event a new day')
+                            console.log(day);
+
+                            intervals=new Array;
+                            index = days.findIndex((element) => element.day === day );
+                            intervals.push(days[index].intervals[0])
+                            intervals.push(event2)
+                            let newDay = { day: day, intervals: intervals }
+                            days.push(newDay)
+                            //console.log(days)
+                            //delete the original as it has been cloned and added
+                            days.splice(index,1)
+                            //console.log(days)
+
+                         }
+                        // end 2nd half of event 
+                    }
+                    else{
+                        //console.log("event does not extends past midnight") 
+                        color = this.state.colors[id - 1]
+                        let event = {
                             'title': title,
                             'allDay': false,
                             'start': startOfEventOrDay, // 10.00 AM
@@ -387,52 +458,32 @@ class Tracker extends React.Component {
                             'lengthAsPercentageOfDay': (eventLenInHrs / 24 * 100).toFixed(2),
                             'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
                             'id' :eventId
-                            }
+                        }
+    
+                        events.push(event)
+    
+                        day = day = moment(new Date(c.start)).format('YYYYMMDD')
+             
+                        intervals = new Array;
+                        index = days.findIndex((element) => element.day === day);
+                        intervals.push(event)
+
+                        if (index === -1 ){
+                            days.push({ day: day, intervals: intervals })
+                        }else{
+                           intervals=new Array;
+                           intervals.push(days[index].intervals[0])
                            intervals.push(event)
-                           day = c.start.substring(0, 10).replace(/-/g,'')
                            let newDay = { day: day, intervals: intervals }
                            days.push(newDay)
-                           days.splice(indexNextDay,1)
-                           */
+                           //console.log(days[index])
+                           days.splice(index,1)
+                           //console.log(days.length)
                         }
                     }
 
-                    let event = {
-                        'title': title,
-                        'allDay': false,
-                        'start': startOfEventOrDay, // 10.00 AM
-                        'end': endOfEventOrDay, // 2.00 PM 
-                        'color': color,
-                        'lengthAsPercentageOfDay': (eventLenInHrs / 24 * 100).toFixed(2),
-                        'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
-                        'id' :eventId
-                    }
-
-                    events.push(event)
-
-                    //day = c.start.substring(0, 10).replace(/-/g,'')
-         
-                    let initArray = new Array;
-                    initArray.push(event)
-                    if (index === -1 ){
-                        days.push({ day: day, intervals: initArray })
-                    }else{
-                       let intervals=new Array;
-                       intervals.push(days[index].intervals[0])
-                       intervals.push(event)
-                       let newDay = { day: day, intervals: intervals }
-                       days.push(newDay)
-                       //console.log(days[index])
-                       days.splice(index,1)
-                       //console.log(days.length)
-                    }
-                   
-
-                    //days.pushIfNotExist(c.start.substring(0, 10),days.inArray(c.start.substring(0, 10)))
-
                     var start = moment(new Date(c.start));
                     var end = moment(new Date(c.end));
-
                     let diff = end.diff(start) / 12000000
 
                     totalHours.push(diff)
@@ -587,13 +638,13 @@ class Tracker extends React.Component {
                 
                 timelineIntervals.push(<div class="resize-drag" 
                                             style={{left : element.startTimeAsPercentageOfDay+'%' , width: element.lengthAsPercentageOfDay+'%', backgroundColor: element.color}}>
-                                                {element.start.format('DD, h:mm:ss a')} { element.end.format('DD, h:mm:ss a')} {element.id}
+                                                {element.start.format('MM DD, h:mm:ss a')} { element.end.format('MM DD, h:mm:ss a')} {element.id}
                                         </div>)
             },this);
 
             return (
                 <div className="row timeline" key={this.uuidv4()}>
-                    <div className="timelineDate">{key.day}</div>{timelineIntervals}
+                    <div className="timelineDate">{key.day.substring(4,6)}-{key.day.substring(6,8)}-{key.day.substring(0,4)}</div>{timelineIntervals}
                 </div>
 
             );
