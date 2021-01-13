@@ -17,13 +17,13 @@
 
   .timeline {
       height:20px;
-      border: 1px solid #aaaaaa;
+      border: 1px solid #dbdbdb;
       margin-bottom: 2px;
   }
 
   .timelineDate{
       z-index: 1;
-      color: #aaaaaa;
+      color: #dbdbdb;
       width: 100%;
       margin: auto
   }

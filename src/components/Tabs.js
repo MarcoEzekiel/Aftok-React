@@ -10,11 +10,14 @@ const Tabs = ({state,onClickHandler,loggedIn}) =>{
                 <div id="login" className={state.login ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('login')}>
                      {loggedIn.loggedIn===true? '':'Login'}
                 </div>
+                <div  id="tracker"  className={state.tracker ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('tracker')}>
+                    Time Tracker
+                </div>
+                <div  id="tracker"  className={state.dashboard ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('dashboard')}>
+                    Dashboard
+                </div>
                 <div id="projects"  className={state.projects ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('projects')}>
                     Projects
-                </div>
-                <div  id="tracker"  className={state.tracker ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('tracker')}>
-                    Dashboard
                 </div>
                 <div  id="revenue"  className={state.revenue ? 'col-md-2 selected':'col-md-2 tab'} onClick={() => onClickHandler('revenue')}>
                     Revenue
