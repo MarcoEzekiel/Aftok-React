@@ -10,7 +10,7 @@ function Footer() {
       <div className="row">
         <div className="col-12 col-md-4 col-lg-3">
       
-          <a className="navbar-brand" href="./index.html">
+          <a className="navbar-brand" href="../index.html">
             <h4 className="font-weight-bold">
               Aftok
             </h4>
