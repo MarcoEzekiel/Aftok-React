@@ -29,18 +29,18 @@ function Footer() {
 
           <ul className="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
             <li className="mb-3">
-              <a href="./team.html" className="text-reset">
+              <a href="../team.html" className="text-reset">
                 Team
               </a>
             </li>
            
             <li className="mb-3">
-              <a href="./contact.html" className="text-reset">
+              <a href="../contact.html" className="text-reset">
                 Contact
               </a>
             </li>
             <li className="mb-3">
-              <a href="./join-us.html" className="text-reset">
+              <a href="../join-us.html" className="text-reset">
                 Join Us!
               </a>
             </li>
@@ -55,17 +55,17 @@ function Footer() {
 
           <ul className="list-unstyled text-muted mb-6 mb-md-8 mb-lg-0">
             <li className="mb-3">
-              <a href="./pricing.html" className="text-reset">
+              <a href="../pricing.html" className="text-reset">
                 Pricing
               </a>
             </li>
             <li className="mb-3">
-              <a href="./licenses.html" className="text-reset">
+              <a href="../licenses.html" className="text-reset">
                 Sample Licenses
               </a>
             </li>
             <li className="mb-3">
-              <a href="./data_policy.html" className="text-reset">
+              <a href="../data_policy.html" className="text-reset">
                 Data Policy
               </a>
             </li>
@@ -80,12 +80,12 @@ function Footer() {
 
           <ul className="list-unstyled text-muted mb-0">
             <li className="mb-3">
-              <a href="./sitemap.html" className="text-reset">
+              <a href="../sitemap.html" className="text-reset">
                 Site Map
               </a>
             </li>
             <li className="mb-3">
-              <a href="./docs/index.html" className="text-reset">
+              <a href="../docs/index.html" className="text-reset">
                 API Docs
               </a>
             </li>

@@ -9,6 +9,7 @@ footer {
     line-height: 17px;
     /* Vertically center the text there */
     background-color: #161c2d;
-    color: #869ab8
+    color: #869ab8;
+    z-index: 200;
   }
   
