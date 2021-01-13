@@ -90,8 +90,8 @@ class Tracker extends React.Component {
 
                     // minimum size
                     interact.modifiers.restrictSize({
-                        min: { width: 1, height: 20 },
-                        max: { width: 2000, height: 20 }
+                        min: { width: 1, height: 28 },
+                        max: { width: 2000, height: 28 }
                     })
                 ],
 
@@ -262,25 +262,8 @@ class Tracker extends React.Component {
 
         this.getWorkIndex();
 
-        /** 
-        const RSS_URL = `https://electriccoin.co/blog/feed/`;
-
-        fetch(RSS_URL, {
-            mode: 'no-cors',
-            header: {
-                'Access-Control-Allow-Origin':'*',
-            }
-        })
-        .then(response => response.text())
-        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-        .then(data => console.log(data))
-        */
-
-
     }
-    auctionSideDiv() {
-        //  console.log(AuctionHarness.PendingHarness)
-    }
+    
 
     buildIntervals(result, isLoaded) {
         var groups = []
@@ -483,56 +466,7 @@ class Tracker extends React.Component {
 
         }, this);
 
-
-        AuctionHarness.PendingHarness.forEach(function (c, i, a) {
-            //  console.log(c)
-            let days = (new Date(c.voteCloses) - new Date(c.voteOpens)) / (1000 * (60 * 60) * 24)
-            //    console.log(days)
-            for (var i = 0; i < days; i++) {
-                let event = {
-                    'title': "P : " + c.need,
-                    'allDay': false,
-                    'start': moment(c.start).add(i, 'days'), // 10.00 AM
-                    'end': moment(c.start).add(i, 'days').add(1, 'hours'), // 2.00 PM 
-                    'color': '#e0fd6f'
-                }
-                events.push(event)
-            }
-        }, this);
-
-        AuctionHarness.VotingHarness.forEach(function (c, i, a) {
-            //  console.log(c)
-            let days = (new Date(c.voteCloses) - new Date(c.voteOpens)) / (1000 * (60 * 60) * 24)
-            //  console.log(days)
-            for (var i = 0; i < days; i++) {
-                let event = {
-                    'title': "V : " + c.need,
-                    'allDay': false,
-                    'start': moment(c.start).add(i, 'days'), // 10.00 AM
-                    'end': moment(c.start).add(i, 'days').add(1, 'hours'), // 2.00 PM 
-                    'color': '#8dda75'
-                }
-                events.push(event)
-            }
-        }, this);
-
-        AuctionHarness.BiddingHarness.forEach(function (c, i, a) {
-            //  console.log(c)
-            let days = (new Date(c.voteCloses) - new Date(c.voteOpens)) / (1000 * (60 * 60) * 24)
-            //   console.log(days)
-            for (var i = 0; i < days; i++) {
-                let event = {
-                    'title': "A : " + c.need,
-                    'allDay': false,
-                    'start': moment(c.start).add(i, 'days'), // 10.00 AM
-                    'end': moment(c.start).add(i, 'days').add(1, 'hours'), // 2.00 PM 
-                    'color': '#8c0c2c'
-                }
-                events.push(event)
-            }
-        }, this);
-
-        this.getProjects();
+        //this.getProjects();
         // set state here
         // console.log(days)
         days.sort(function (a, b) { return a.day - b.day }).reverse();
@@ -550,56 +484,6 @@ class Tracker extends React.Component {
 
     render() {
 
-        //console.log(this.state)
-        //console.log(Date.now() - this.state.startTime)
-
-        const pendingAuctions = Object.entries(AuctionHarness.PendingHarness).map((key, i) => {
-            return (
-                <div className="col-md-12 pt-1" key={this.uuidv4()}>
-                    <div className={(i % 2 === 0) ? "stripe row border-bottom" : "row border-bottom"}>
-                        <div className="col-md-12">
-                            <span className="float-left">{key[1].need}</span>
-                        </div>
-                        <div className="col-md-12">
-                            <span className="float-left">Vote Opens: {moment(key[1].voteOpens).format("MMM Do YY")}</span>
-                        </div>
-                    </div>
-                </div>
-            );
-        });
-
-        const votingAuctions = Object.entries(AuctionHarness.VotingHarness).map((key, i) => {
-            return (
-                <div className="col-md-12 pt-1" key={this.uuidv4()}>
-                    <div className={(i % 2 === 0) ? "stripe row border-bottom" : "row border-bottom"}>
-                        <div className="col-md-12">
-                            <span className="float-left">{key[1].need}</span>
-                        </div>
-                        <div className="col-md-12">
-                            <span className="float-left">Vote Closes: {moment(key[1].voteCloses).format("MMM Do YY")}</span>
-                        </div>
-                    </div>
-
-                </div>
-            );
-        });
-
-        const biddingAuctions = Object.entries(AuctionHarness.BiddingHarness).map((key, i) => {
-            return (
-                <div className="col-md-12 pt-1" key={this.uuidv4()}>
-                    <div className={(i % 2 === 0) ? "stripe row border-bottom" : "row border-bottom"}>
-                        <div className="col-md-12">
-                            <span className="float-left">{key[1].need}</span>
-                        </div>
-                        <div className="col-md-12">
-                            <span className="float-left">Auction Closes: {moment(key[1].auctionCloses).format("MMM Do YY")}</span>
-                        </div>
-                    </div>
-                </div>
-            );
-        });
-
-
         const timelines = this.state.days.map((key, i) => {
 
             let timelineIntervals = [];
@@ -608,7 +492,7 @@ class Tracker extends React.Component {
 
                 timelineIntervals.push(<div class="resize-drag"
                     style={{ left: element.startTimeAsPercentageOfDay + '%', width: element.lengthAsPercentageOfDay + '%', backgroundColor: element.color }}>
-                    {element.start.format('MM DD, h:mm:ss a')} {element.end.format('MM DD, h:mm:ss a')} {element.id}
+                    {element.start.format('h:mm a')}-{element.end.format('h:mm a')} {element.id}
                 </div>)
             }, this);
 
@@ -630,10 +514,10 @@ class Tracker extends React.Component {
 
                     </div>
 
-                    <div className="col-md-8 main-content">
+                    <div className="col-md-8">
                         <div className="row">
                             <div className="col-md-12">
-                                <div className="row tabs pt-3">
+                                <div className="row">
                                     <div className="col-md-12">
                                         <h3>Time Tracker</h3>
                                     </div>

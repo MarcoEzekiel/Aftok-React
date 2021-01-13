@@ -610,7 +610,7 @@ class Dashboard extends React.Component {
                     <div className="col-md-8 main-content">
                         <div className="row">
                             <div className="col-md-9">
-                                <div className="row tabs pt-3">
+                                <div className="row">
                                     <div className="col-md-12">
                                         <h3>My Dashboard</h3>
                                     </div>
