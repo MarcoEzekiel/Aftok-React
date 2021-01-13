@@ -1,6 +1,6 @@
 // src/Tracker.js
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import '../css/tracker.css'
+import '../css/dashboard.css'
 
 import React from 'react'
 import moment from 'moment'
@@ -14,7 +14,7 @@ let allViews = Object.keys(Views).map(k => Views[k])
 
 
 
-class Tracker extends React.Component {
+class Dashboard extends React.Component {
 
     constructor(props) {
         super(props);
@@ -140,7 +140,7 @@ class Tracker extends React.Component {
     startWorkHandler(event) {
 
         const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
-        let body = { schemaVersion: "2.0" }
+        let  body = {schemaVersion: "2.0"}
 
         fetch(apiUrl, {
             body: JSON.stringify(body),
@@ -168,9 +168,9 @@ class Tracker extends React.Component {
     }
 
 
-    stopWorkHandler(event) {
+    stopWorkHandler(event){
         const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
-        let body = { schemaVersion: "2.0" }
+        let  body = {schemaVersion: "2.0"}
 
         fetch(apiUrl, {
             body: JSON.stringify(body),
@@ -199,8 +199,8 @@ class Tracker extends React.Component {
 
 
     getProjects() {
-
-        const apiUrl = "/api/projects"
+       
+        const apiUrl = "/api/projects" 
         fetch(apiUrl, {
             method: 'GET',
             headers: { 'Content-Type': 'text/application' },
@@ -225,7 +225,7 @@ class Tracker extends React.Component {
     }
 
     getWorkIndex() {
-
+       
         const apiUrl = "/api/projects/091be765-7493-426f-8203-be611ab3ea13/workIndex?limit=100&before=" + this.isoNow()
 
         fetch(apiUrl, {
@@ -254,14 +254,10 @@ class Tracker extends React.Component {
 
     componentDidMount() {
 
-
-        // establish initial timeline width
-        let box = document.querySelector('#timelines');
-        let width = box.offsetWidth;
-        this.setState({ intervalsInitialWidth: width })
+     
 
         this.getWorkIndex();
-
+       
         /** 
         const RSS_URL = `https://electriccoin.co/blog/feed/`;
 
@@ -279,7 +275,7 @@ class Tracker extends React.Component {
 
     }
     auctionSideDiv() {
-        //  console.log(AuctionHarness.PendingHarness)
+      //  console.log(AuctionHarness.PendingHarness)
     }
 
     buildIntervals(result, isLoaded) {
@@ -319,8 +315,8 @@ class Tracker extends React.Component {
 
                     let eventLenInHrs = (new Date(c.end) - new Date(c.start)) / (1000 * (60 * 60))
                     let title = eventLenInHrs.toFixed(2) + " Hrs. ";
-                    let endOfEventOrDay = moment(new Date(c.end));
-                    let startOfEventOrDay = moment(new Date(c.start))
+                    let endOfEventOrDay= moment(new Date(c.end));
+                    let startOfEventOrDay=moment(new Date(c.start))
                     // get from server
                     let eventId = this.uuidv4.toString
                     let event2;
@@ -329,14 +325,14 @@ class Tracker extends React.Component {
                     let calcLen;
 
                     // if event spans days
-                    if (moment(new Date(c.start)).format('DD') !== moment(new Date(c.end)).format('DD')) {
+                    if(moment(new Date(c.start)).format('DD')!== moment(new Date(c.end)).format('DD')){
                         //console.log("event exends past midnight")
                         // use array @ id for this user offset visualy groups events extending past 24 hrs
                         color = this.state.colorsOffset[id - 1]
-
+                        
                         // 1st half of event
                         // helps calculate length as percentage of day
-                        calcLen = (new Date(c.start).setHours(23, 59, 59, 59) - new Date(c.start)) / (1000 * (60 * 60))
+                        calcLen = (new Date(c.start).setHours(23,59,59,59) -  new Date(c.start)) / (1000 * (60 * 60))
                         event1 = {
                             'title': title,
                             'allDay': false,
@@ -345,7 +341,7 @@ class Tracker extends React.Component {
                             'color': color,
                             'lengthAsPercentageOfDay': (calcLen / 24 * 100).toFixed(2),
                             'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
-                            'id': eventId
+                            'id' :eventId
                         }
                         // put into array
                         intervals = new Array;
@@ -354,15 +350,15 @@ class Tracker extends React.Component {
                         day = moment(new Date(c.start)).format('YYYYMMDD')
 
                         // if the day doesn't exist add it to the days array
-                        if ((days.findIndex((element) => element.day === day) === -1)
-                        ) {
+                        if((days.findIndex((element) => element.day === day) === -1)
+                        ){    
                             //console.log('1st event day exists')
                             days.push({ day: day, intervals: intervals })
                         }
-                        else {
+                        else{
                             // else get the existing day and add event to its array
                             //console.log('1st event a new day')
-                            intervals = new Array;
+                            intervals=new Array;
                             index = days.findIndex((element) => element.day === day);
 
                             intervals.push(days[index].intervals[0])
@@ -370,15 +366,15 @@ class Tracker extends React.Component {
                             let newDay = { day: day, intervals: intervals }
                             days.push(newDay)
                             //delete the original as it has been cloned and added
-                            days.splice(index, 1)
-                        }
+                            days.splice(index,1)
+                         }
                         // end first half of event
 
 
                         // 2nd half of event
                         // helps calculate length as percentage of day
-                        calcLen = (new Date(c.end) - new Date(c.end).setHours(0, 0, 0, 0)) / (1000 * (60 * 60))
-
+                        calcLen = (new Date(c.end) - new Date(c.end).setHours(0,0,0,0)) / (1000 * (60 * 60))   
+                        
                         event2 = {
                             'title': title,
                             'allDay': false,
@@ -387,7 +383,7 @@ class Tracker extends React.Component {
                             'color': color,
                             'lengthAsPercentageOfDay': (calcLen / 24 * 100).toFixed(2),
                             'startTimeAsPercentageOfDay': 0,
-                            'id': eventId
+                            'id' :eventId
                         }
                         // put into array
                         intervals = new Array;
@@ -397,28 +393,28 @@ class Tracker extends React.Component {
                         day = moment(new Date(c.end)).format('YYYYMMDD')
                         console.log(day)
                         // if the day doesn't exist add it to the days array
-                        if ((days.findIndex((element) => element.day === day) === -1)
-                        ) {
+                        if((days.findIndex((element) => element.day === day) === -1)
+                        ){    
                             //console.log('2nd event day exists')
                             days.push({ day: day, intervals: intervals })
                         }
-                        else {
+                        else{
                             // else get the existing day and add event to its array
                             // console.log('2nd event a new day')
 
-                            intervals = new Array;
-                            index = days.findIndex((element) => element.day === day);
+                            intervals=new Array;
+                            index = days.findIndex((element) => element.day === day );
                             intervals.push(days[index].intervals[0])
                             intervals.push(event2)
                             let newDay = { day: day, intervals: intervals }
                             days.push(newDay)
                             //delete the original as it has been cloned and added
-                            days.splice(index, 1)
+                            days.splice(index,1)
 
-                        }
+                         }
                         // end 2nd half of event 
                     }
-                    else {
+                    else{
                         //console.log("event does not extends past midnight") 
                         color = this.state.colors[id - 1]
                         let event = {
@@ -429,28 +425,28 @@ class Tracker extends React.Component {
                             'color': color,
                             'lengthAsPercentageOfDay': (eventLenInHrs / 24 * 100).toFixed(2),
                             'startTimeAsPercentageOfDay': (diffMinutes / (24 * 60) * 100).toFixed(2),
-                            'id': eventId
+                            'id' :eventId
                         }
-
+    
                         events.push(event)
-
+    
                         day = day = moment(new Date(c.start)).format('YYYYMMDD')
-
+             
                         intervals = new Array;
                         index = days.findIndex((element) => element.day === day);
                         intervals.push(event)
 
-                        if (index === -1) {
+                        if (index === -1 ){
                             days.push({ day: day, intervals: intervals })
-                        } else {
-                            intervals = new Array;
-                            intervals.push(days[index].intervals[0])
-                            intervals.push(event)
-                            let newDay = { day: day, intervals: intervals }
-                            days.push(newDay)
-                            //console.log(days[index])
-                            days.splice(index, 1)
-                            //console.log(days.length)
+                        }else{
+                           intervals=new Array;
+                           intervals.push(days[index].intervals[0])
+                           intervals.push(event)
+                           let newDay = { day: day, intervals: intervals }
+                           days.push(newDay)
+                           //console.log(days[index])
+                           days.splice(index,1)
+                           //console.log(days.length)
                         }
                     }
 
@@ -534,8 +530,8 @@ class Tracker extends React.Component {
 
         this.getProjects();
         // set state here
-        // console.log(days)
-        days.sort(function (a, b) { return a.day - b.day }).reverse();
+       // console.log(days)
+        days.sort(function(a, b){return a.day - b.day}).reverse();
         this.setState({
             groups: groups,
             startTime: startTime,
@@ -579,7 +575,7 @@ class Tracker extends React.Component {
                             <span className="float-left">Vote Closes: {moment(key[1].voteCloses).format("MMM Do YY")}</span>
                         </div>
                     </div>
-
+              
                 </div>
             );
         });
@@ -599,43 +595,24 @@ class Tracker extends React.Component {
             );
         });
 
-
-        const timelines = this.state.days.map((key, i) => {
-
-            let timelineIntervals = [];
-
-            key.intervals.forEach(element => {
-
-                timelineIntervals.push(<div class="resize-drag"
-                    style={{ left: element.startTimeAsPercentageOfDay + '%', width: element.lengthAsPercentageOfDay + '%', backgroundColor: element.color }}>
-                    {element.start.format('MM DD, h:mm:ss a')} {element.end.format('MM DD, h:mm:ss a')} {element.id}
-                </div>)
-            }, this);
-
-            return (
-                <div className="row timeline" key={this.uuidv4()}>
-                    <div className="timelineDate">{key.day.substring(4, 6)}-{key.day.substring(6, 8)}-{key.day.substring(0, 4)}</div>{timelineIntervals}
-                </div>
-
-            );
-
-        }, this);
-
-
+        
         return (
 
             <div className="container-fluid">
+
+        
                 <div className="row">
                     <div className="col-md-2">
 
                     </div>
 
+
                     <div className="col-md-8 main-content">
                         <div className="row">
-                            <div className="col-md-12">
+                            <div className="col-md-9">
                                 <div className="row tabs pt-3">
                                     <div className="col-md-12">
-                                        <h3>Time Tracker</h3>
+                                        <h3>My Dashboard</h3>
                                     </div>
                                 </div>
 
@@ -704,30 +681,124 @@ class Tracker extends React.Component {
                                         </div>
                                     </div>
                                 </section>
+
+
+                                <div className="pt-5"></div>
+                                <section className="contribution-overview text-muted">
+
+                                    <div className="row">
+                                        <div className="col-md-6">
+                                            {this.state.hrs.map((contributer, index) => (
+
+                                                <div className="row" key={this.uuidv4()} style={{ color: this.state.colors[index] }}>
+                                                    <div className="col-md-8"><span className="float-left">{contributer.creditTo}</span></div>
+                                                    <div className="col-md-4"><span className="float-left">{contributer.ttl.toFixed(2)} Hrs</span></div>
+                                                </div>
+
+                                            ))}
+                                        </div>
+                                        <div className="md-6">
+                                            <div className="row">
+                                                <div className="col-md-6"><span className="float-left">Hours</span></div>
+                                                <div className="col-md-6"><span className="float-left">{this.state.totalHours.reduce(function (a, b) {
+                                                    return a + b;
+                                                }, 0).toFixed(2)}</span></div>
+                                            </div>
+                                            <div className="row">
+                                                <div className="col-md-6"><span className="float-left">Revenue</span></div>
+                                                <div className="col-md-6"><span className="float-left">16 zec</span></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </section>
+
+                                <div className="hr"></div>
+
+
+
+
+                                <div style={{ height: 700 }} className="row pt-3">
+
+                                    <div className="col-md-12">
+                                        <Calendar
+                                            localizer={localizer}
+                                            events={this.state.events}
+                                            step={60}
+                                            views={allViews}
+                                            showMultiDayTimes
+                                            min={new Date(this.state.startTime)}
+                                            max={new Date()}
+                                            defaultDate={new Date()}
+                                            startAccessor="start"
+                                            endAccessor="end"
+                                            eventPropGetter={(this.eventStyleGetter)}
+                                        />
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div className="col-md-3 right-col pt-3">
+                                <div className="row pt-3">
+                                    <div className="col-md-12">
+                                        <h5>Revenue</h5>
+                                    </div>
+                                    <div className="col-md-6">x^6@dobit.com</div>
+                                    <div className="col-md-6"><span className="float-left">12 zec</span></div>
+                                    <div className="col-md-6 stripe">dr*)2@dobit.com</div>
+                                    <div className="col-md-6 stripe"><span className="float-left">2 zec</span></div>
+                                    <div className="col-md-6">z_66*dobit.com</div>
+                                    <div className="col-md-6"><span className="float-left">2 zec</span></div>
+                                </div>
+                                <div className="row pt-3">
+                                    <div className="col-md-12">
+                                        <h5>Auctions</h5>
+                                    </div>
+                                    <div className="col-md-12 pt-1">
+                                        <div className="row">
+                                            <div className="col-md-12 pending-color stripe">Pending</div>
+                                            {pendingAuctions}
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 pt-3">
+                                        <div className="row">
+                                            <div className="col-md-12 voting-color stripe">Voting</div>
+                                            {votingAuctions}
+                                        </div>
+                                    </div>
+                                    <div className="col-md-12 pt-3">
+                                        <div className="row">
+                                            <div className="col-md-12 active-color stripe">Active</div>
+                                            {biddingAuctions}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row pt-3">
+                                    <div className="col-md-12">
+                                        <h5>Forum</h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
 
                     <div className="col-md-2">
 
                     </div>
+
+
                 </div>
 
-                <section className="timelines">
-                    <div className="row">
-                        <div className="col-md-2">
 
-                        </div>
-                        <div className="col-md-8" id="timelines">
-                            {timelines}
-                        </div>
-                        <div className="col-md-2">
 
-                        </div>
-                    </div>
-                </section>
+
+
+
             </div>
         )
     }
 }
-export default Tracker
+export default Dashboard

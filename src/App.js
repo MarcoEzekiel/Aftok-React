@@ -8,6 +8,7 @@ import Projects from './components/Projects';
 import Tracker from './components/Tracker';
 import Revenue from './components/Revenue';
 import Auctions from './components/Auctions';
+import Dashboard from './components/DashBoard';
 import './css/App.css';
 
 const App = () =>{
@@ -29,7 +30,8 @@ const App = () =>{
         projects:false,
         tracker:false,
         revenue:false,
-        auctions:false
+        auctions:false,
+        dashboard: false
     })
 
 
@@ -42,7 +44,8 @@ const App = () =>{
           projects:false,
           tracker:false,
           revenue:false,
-          auctions:false
+          auctions:false,
+          dashboard: false
         }
         break;
       case 'projects':
@@ -51,7 +54,8 @@ const App = () =>{
           projects:true,
           tracker:false,
           revenue:false,
-          auctions:false
+          auctions:false,
+          dashboard: false
         }
         break;
       case 'tracker':
@@ -60,7 +64,8 @@ const App = () =>{
           projects:false,
           tracker:true,
           revenue:false,
-          auctions:false
+          auctions:false,
+          dashboard: false
         }
         break;
       case 'revenue':
@@ -69,7 +74,8 @@ const App = () =>{
           projects:false,
           tracker:false,
           revenue:true,
-          auctions:false
+          auctions:false,
+          dashboard: false
         }
         break;
       case 'auctions':
@@ -78,7 +84,18 @@ const App = () =>{
           projects:false,
           tracker:false,
           revenue:false,
-          auctions:true
+          auctions:true,
+          dashboard: false
+        }
+        break;
+      case 'dashboard':
+        focusState={
+          login:false,
+          projects:false,
+          tracker:false,
+          revenue:false,
+          auctions:false,
+          dashboard: true
         }
         break;
       default:
@@ -101,6 +118,8 @@ const App = () =>{
       return <Tracker />;
     }else if (pageFocus.auctions){
       return <Auctions />;
+    }else if (pageFocus.dashboard){
+      return <Dashboard/>;
     }
   }
 
