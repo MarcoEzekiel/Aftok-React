@@ -11,6 +11,7 @@ import Auctions from './components/Auctions';
 import Dashboard from './components/DashBoard';
 import './css/App.css';
 
+
 const App = () =>{
   var cookie = Document.cookie
   console.log(cookie)
