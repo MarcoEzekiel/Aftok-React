@@ -4,6 +4,7 @@ import React from 'react';
 import  '../css/tabs.css';
 
 const Tabs = ({state,onClickHandler,loggedIn}) =>{
+    console.log(state)
     return (
         <div className="container-fluid">
             <div className="row tabs">

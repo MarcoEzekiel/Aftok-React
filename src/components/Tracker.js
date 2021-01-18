@@ -6,7 +6,6 @@ import React from 'react'
 import moment from 'moment'
 import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import interact from 'interactjs'
-import AuctionHarness from "../AuctionsHarness"
 
 const localizer = momentLocalizer(moment)
 // for react big calender
@@ -18,6 +17,7 @@ class Tracker extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(props)
 
         this.state = {
             error: null,
@@ -49,8 +49,6 @@ class Tracker extends React.Component {
             intervalsInitialWidth: 0,
             days: []
         };
-        this.getWorkIndex = this.getWorkIndex.bind(this);
-        this.getProjects = this.getProjects.bind(this);
         this.startWorkHandler = this.startWorkHandler.bind(this);
         this.stopWorkHandler = this.stopWorkHandler.bind(this);
         this.buildIntervals = this.buildIntervals.bind(this);
@@ -198,72 +196,17 @@ class Tracker extends React.Component {
     }
 
 
-    getProjects() {
-
-        const apiUrl = "/api/projects"
-        fetch(apiUrl, {
-            method: 'GET',
-            headers: { 'Content-Type': 'text/application' },
-            credentials: 'include',
-            cache: 'default'
-        }, this)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    console.log(result);
-                }, this,
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.setState({
-                        isLoaded: false,
-                        error
-                    });
-                }
-            )
-    }
-
-    getWorkIndex() {
-
-        const apiUrl = "/api/projects/091be765-7493-426f-8203-be611ab3ea13/workIndex?limit=100&before=" + this.isoNow()
-
-        fetch(apiUrl, {
-            method: 'GET',
-            headers: { 'Content-Type': 'text/application' },
-            credentials: 'include',
-            cache: 'default'
-        }, this)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.buildIntervals(result, true)
-                }, this,
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.setState({
-                        isLoaded: false,
-                        error
-                    });
-                }
-            )
-    }
-
-
     componentDidMount() {
-
 
         // establish initial timeline width
         let box = document.querySelector('#timelines');
         let width = box.offsetWidth;
         this.setState({ intervalsInitialWidth: width })
-
-        this.getWorkIndex();
+        console.log(this.props.workIndex)
+        this.props.workIndex.workIndex !== undefined ? this.buildIntervals(this.props.workIndex, true) : console.log('waiting to select project')
 
     }
-    
+
 
     buildIntervals(result, isLoaded) {
         var groups = []
@@ -276,7 +219,6 @@ class Tracker extends React.Component {
         let index = "";
         let day = "";
         let intervals;
-
         toLoop.forEach(function (contributer) {
 
             contributer.workIndex.forEach(function (c, i, a) {
@@ -466,9 +408,7 @@ class Tracker extends React.Component {
 
         }, this);
 
-        //this.getProjects();
         // set state here
-        // console.log(days)
         days.sort(function (a, b) { return a.day - b.day }).reverse();
         this.setState({
             groups: groups,
@@ -482,8 +422,15 @@ class Tracker extends React.Component {
         })
     }
 
-    render() {
+    componentDidUpdate(prevProps) {
+        if(this.props.workIndex !== prevProps.workIndex) 
+        {
+          this.buildIntervals(this.props.workIndex,true)
+        }
+      }
 
+    render() {
+        
         const timelines = this.state.days.map((key, i) => {
 
             let timelineIntervals = [];
@@ -502,16 +449,45 @@ class Tracker extends React.Component {
                 </div>
 
             );
-
         }, this);
 
+        const projects = () => {
+            let selects = [];
+            if(this.props.projects !== false){
+            this.props.projects.forEach(element =>
+                selects.push(<option value={element.projectId} >{element.project.projectName}</option>)
+            );
+            }
+            let getInitialState = () => {
+                return {
+                    value: 'select'
+                }
+            }
+            let change = (event) => {
+                this.setState({ value: event.target.value });
+                this.props.handleSelectedProjectState(event.target.value)
 
+            }
+
+            return (
+                <div className="row pt-6">
+                    <div className="col-md-12 form-group">
+                        <label className="sr-only" >Project</label>
+                        <select className="form-control" id="projectSelect" onChange={change} value={this.props.selectedProject}>
+                            <option defaultValue value="select" disabled="">Select a project</option>
+                            {selects}
+                        </select>
+                    </div>
+                </div>
+            );
+
+        }
+        
         return (
 
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-2">
-
                     </div>
 
                     <div className="col-md-8">
@@ -524,17 +500,7 @@ class Tracker extends React.Component {
                                 </div>
 
                                 <section className="" id="projectSelector">
-                                    <div className="row pt-6">
-                                        <div className="col-md-12 form-group">
-                                            <label className="sr-only" >Project</label>
-                                            <select className="form-control" id="projectSelect">
-                                                <option defaultValue value="" disabled="">Select a project</option>
-                                                <option value="091be765-7493-426f-8203-be611ab3ea13">fixpoint-dev </option>
-                                                <option value="091be765-7493-426f-8203-be611ab3ea14">fixpoint-admin</option>
-                                                <option value="091be765-7493-426f-8203-be611ab3ea15">fixpoint-marketing</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    {projects()}
                                     <div className="row pt-6">
                                         <div className="col-md-2">
                                             <button id="startWork" className={this.state.workStarted === false ? "btn btn-primary float-left my-2" : "btn btn-primary float-left my-2 btn-disable"} onClick={this.startWorkHandler}>Start Work</button>
