@@ -165,14 +165,10 @@ stopWorkHandler = (event) =>{
     })
   }
 
-
+  /**
+  * @param {Array} userProjects 
+  */
   handleProjectsState = (userProjects) => {
-    console.log(userProjects)
-    let up = userProjects
-    up.forEach(element => {
-      console.log(element.projectId)
-      this.getProject(element.projectId)
-    });
     this.setState({ userProjects: userProjects })
   }
 
@@ -198,6 +194,7 @@ stopWorkHandler = (event) =>{
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         (error) => {
+          // make default and entry , error to login if cookie expired
           this.setState({
             isLoaded: false,
             error

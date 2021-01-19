@@ -8,10 +8,6 @@ import { Calendar, Views, momentLocalizer } from 'react-big-calendar'
 import interact from 'interactjs'
 
 const localizer = momentLocalizer(moment)
-// for react big calender
-let allViews = Object.keys(Views).map(k => Views[k])
-
-
 
 class Tracker extends React.Component {
 
@@ -226,7 +222,10 @@ class Tracker extends React.Component {
                             intervals = new Array;
                             index = days.findIndex((element) => element.day === day);
 
-                            intervals.push(days[index].intervals[0])
+                            let interVs = days[index].intervals;
+                            interVs.forEach(element => intervals.push(element))
+
+                            //intervals.push(days[index].intervals[0])
                             intervals.push(event1)
                             let newDay = { day: day, intervals: intervals }
                             days.push(newDay)
@@ -254,9 +253,7 @@ class Tracker extends React.Component {
                         intervals = new Array;
                         intervals.push(event2)
                         // c. end is 2nd day
-                        console.log(c.end)
                         day = moment(new Date(c.end)).format('YYYYMMDD')
-                        console.log(day)
                         // if the day doesn't exist add it to the days array
                         if ((days.findIndex((element) => element.day === day) === -1)
                         ) {
@@ -269,7 +266,10 @@ class Tracker extends React.Component {
 
                             intervals = new Array;
                             index = days.findIndex((element) => element.day === day);
-                            intervals.push(days[index].intervals[0])
+
+                            let interVs = days[index].intervals;
+                            interVs.forEach(element => intervals.push(element))
+
                             intervals.push(event2)
                             let newDay = { day: day, intervals: intervals }
                             days.push(newDay)
