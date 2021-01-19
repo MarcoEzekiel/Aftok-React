@@ -105,7 +105,7 @@ class Tracker extends React.Component {
     }
 
 
-    eventStyleGetter(event) {
+    eventStyleGetter = (event) =>{
         var style = {
             backgroundColor: event.color,
             borderRadius: '0px',
@@ -120,13 +120,13 @@ class Tracker extends React.Component {
         };
     };
 
-    isoNow() {
+    isoNow = () =>{
         var myDate = new Date(); // Set this to your date in whichever timezone.
         var isoDate = myDate.toISOString();
         return isoDate
     };
 
-    uuidv4() {
+    uuidv4 = () =>{
         return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
@@ -144,7 +144,7 @@ class Tracker extends React.Component {
 
     }
 
-    buildIntervals(result, isLoaded) {
+    buildIntervals = (result, isLoaded) =>{
         var groups = []
         var startTime = Date.now()
         var hours = []
@@ -314,30 +314,6 @@ class Tracker extends React.Component {
                             //console.log(days.length)
                         }
                     }
-/*
-                    var start = moment(new Date(c.start));
-                    var end = moment(new Date(c.end));
-                    let diff = end.diff(start) / 12000000
-
-                    totalHours.push(diff)
-
-                    let hr = { creditTo: creditTo, ttl: diff }
-                    let chk = hours.filter(x => x.creditTo === creditTo)
-
-                    if (Array.isArray(chk) && chk.length === 0) {
-                        hours.push(hr)
-                    }
-                    else {
-
-                        var removeIndex = hours.map(function (item) { return item.creditTo; }).indexOf(creditTo);
-                        hours.splice(removeIndex, 1);
-
-                        let newTtl = chk[0].ttl + diff;
-
-                        hr = { creditTo: creditTo, ttl: newTtl }
-                        hours.push(hr)
-                    }
-                    */
 
                 }, this, id, creditTo, contributer);
 

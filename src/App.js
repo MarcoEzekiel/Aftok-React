@@ -37,6 +37,7 @@ class App extends React.Component {
     this.getProjects = this.getProjects.bind(this);
     this.handleSelectedProjectState = this.handleSelectedProjectState.bind(this);
     this.handleProjectsState = this.handleProjectsState.bind(this);
+    this.handleProjectState = this.handleProjectState.bind(this);
     this.handleLoggedinState = this.handleLoggedinState.bind(this);
     this.handlePageFocus = this.handlePageFocus.bind(this);
     this.getPage = this.getPage.bind(this)
@@ -48,13 +49,13 @@ class App extends React.Component {
 
   }
     
-  isoNow() {
+  isoNow = () =>{
     var myDate = new Date(); // Set this to your date in whichever timezone.
     var isoDate = myDate.toISOString();
     return isoDate
   };
 
-  startWorkHandler(event) {
+  startWorkHandler = (event) =>{
 
     const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
     let body = { schemaVersion: "2.0" }
@@ -85,7 +86,7 @@ class App extends React.Component {
 }
 
 
-stopWorkHandler(event) {
+stopWorkHandler = (event) =>{
     const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
     let body = { schemaVersion: "2.0" }
 
@@ -166,7 +167,18 @@ stopWorkHandler(event) {
 
 
   handleProjectsState = (userProjects) => {
+    console.log(userProjects)
+    let up = userProjects
+    up.forEach(element => {
+      console.log(element.projectId)
+      this.getProject(element.projectId)
+    });
     this.setState({ userProjects: userProjects })
+  }
+
+  handleProjectState = (project) => {
+    console.log(project)
+    //this.setState({ userProjects: userProjects })
   }
 
   getProjects = () => {
@@ -194,6 +206,30 @@ stopWorkHandler(event) {
       )
   }
 
+  getProject = (projectId) => {
+    const apiUrl = "/api/projects/"+projectId
+    fetch(apiUrl, {
+      method: 'GET',
+      headers: { 'Content-Type': 'text/application' },
+      credentials: 'include',
+      cache: 'default'
+    }, this)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.handleProjectState(result)
+        }, this,
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            isLoaded: false,
+            error
+          });
+        }
+      )
+  }
 
   handleLoggedinState = (bool) => {
     this.setState({ loggedIn: bool })
