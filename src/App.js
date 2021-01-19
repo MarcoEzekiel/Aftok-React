@@ -12,10 +12,11 @@ import Dashboard from './components/DashBoard';
 import './css/App.css';
 
 
-//const App = () =>{
 class App extends React.Component {
+
   constructor() {
     super()
+
     this.state = {
       workIndex: [],
       selectedProject: '',
@@ -26,9 +27,12 @@ class App extends React.Component {
       revenue: false,
       auctions: false,
       dashboard: false,
-      projects: false
+      projects: false,
+      workStarted: false
     }
+
     this.isoNow = this.isoNow.bind(this);
+
     this.getWorkIndex = this.getWorkIndex.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.handleSelectedProjectState = this.handleSelectedProjectState.bind(this);
@@ -37,16 +41,79 @@ class App extends React.Component {
     this.handlePageFocus = this.handlePageFocus.bind(this);
     this.getPage = this.getPage.bind(this)
 
-    console.log(this.state.userProjects.length)
+    this.startWorkHandler = this.startWorkHandler.bind(this);
+    this.stopWorkHandler = this.stopWorkHandler.bind(this);
+
     if(this.state.userProjects.length === 0) {this.getProjects()}
 
   }
-
+    
   isoNow() {
     var myDate = new Date(); // Set this to your date in whichever timezone.
     var isoDate = myDate.toISOString();
     return isoDate
   };
+
+  startWorkHandler(event) {
+
+    const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
+    let body = { schemaVersion: "2.0" }
+
+    fetch(apiUrl, {
+        body: JSON.stringify(body),
+        method: 'POST',
+    })
+        .then(
+            (result) => {
+                this.setState({
+                    workStarted: true,
+                });
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                this.props.loggedInHandler(false)
+                this.setState({
+                    loggedIn: false,
+                    error
+                });
+            }
+        )
+
+    event.preventDefault();
+}
+
+
+stopWorkHandler(event) {
+    const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
+    let body = { schemaVersion: "2.0" }
+
+    fetch(apiUrl, {
+        body: JSON.stringify(body),
+        method: 'POST',
+    })
+        .then(
+            (result) => {
+                this.setState({
+                    workStarted: false,
+                });
+            },
+            // Note: it's important to handle errors here
+            // instead of a catch() block so that we don't swallow
+            // exceptions from actual bugs in components.
+            (error) => {
+                this.props.loggedInHandler(false)
+                this.setState({
+                    loggedIn: false,
+                    error
+                });
+            }
+        )
+
+    event.preventDefault();
+}
+
   /** 
    * 
    * 
@@ -57,8 +124,6 @@ class App extends React.Component {
    * 
    * 
    * */
-
-
   getWorkIndex = (selectedProject) => {
     const apiUrl = "/api/projects/" + selectedProject + "/workIndex?limit=100&before=" + this.isoNow()
 
@@ -87,8 +152,12 @@ class App extends React.Component {
   }
 
 
-
+/**
+ * 
+ * @param {*} selectedProject 
+ */
   handleSelectedProjectState = (selectedProject) => {
+    // repopulate workindex
     this.getWorkIndex(selectedProject)
     this.setState({
       selectedProject: selectedProject
@@ -212,7 +281,10 @@ class App extends React.Component {
       return <Tracker workIndex={this.state.workIndex}
         projects={this.state.userProjects}
         selectedProject={this.state.selectedProject}
-        handleSelectedProjectState={this.handleSelectedProjectState} />;
+        handleSelectedProjectState={this.handleSelectedProjectState}
+        startWorkHandler={this.startWorkHandler}
+        stopWorkHandler={this.stopWorkHandler}
+        workStarted={this.state.workStarted} />;
     } else if (this.state.auctions) {
       return <Auctions />;
     } else if (this.state.dashboard) {

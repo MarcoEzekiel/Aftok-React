@@ -18,30 +18,29 @@ class Tracker extends React.Component {
     constructor(props) {
         super(props);
         console.log(props)
-
+//F09818
         this.state = {
             error: null,
             isLoaded: false,
-            workStarted: false,
             intervals: [],
             groups: [],
             items: [],
             startTime: Date.now(),
             hrs: [],
             events: [],
-            colors: ['#0000dd',
-                '#a200be',
-                '#dd0099',
-                '#ff0074',
-                '#ff0052',
+            colors: ['#F09818',
+                '#F58A67',
+                '#DE6897',
+                '#C367F5',
+                '#6366EB',
                 '#ff4534',
                 '#ff7c16',
                 '#ffa600'],
-            colorsOffset: ['#0000aa',
-                '#72009e',
-                '#aa0099',
-                '#dd0074',
-                '#dd0052',
+            colorsOffset: ['#E09818',
+                '#F58D67',
+                '#DE6897',
+                '#BD67F5',
+                '#6372EB',
                 '#dd4534',
                 '#dd7c16',
                 '#dda600'],
@@ -49,8 +48,6 @@ class Tracker extends React.Component {
             intervalsInitialWidth: 0,
             days: []
         };
-        this.startWorkHandler = this.startWorkHandler.bind(this);
-        this.stopWorkHandler = this.stopWorkHandler.bind(this);
         this.buildIntervals = this.buildIntervals.bind(this);
 
         interact('.resize-drag')
@@ -88,8 +85,8 @@ class Tracker extends React.Component {
 
                     // minimum size
                     interact.modifiers.restrictSize({
-                        min: { width: 1, height: 28 },
-                        max: { width: 2000, height: 28 }
+                        min: { width: 1, height: 26 },
+                        max: { width: 2000, height: 26 }
                     })
                 ],
 
@@ -135,66 +132,6 @@ class Tracker extends React.Component {
         );
     }
 
-    startWorkHandler(event) {
-
-        const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logStart"
-        let body = { schemaVersion: "2.0" }
-
-        fetch(apiUrl, {
-            body: JSON.stringify(body),
-            method: 'POST',
-        })
-            .then(
-                (result) => {
-                    this.setState({
-                        workStarted: true,
-                    });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.props.loggedInHandler(false)
-                    this.setState({
-                        loggedIn: false,
-                        error
-                    });
-                }
-            )
-
-        event.preventDefault();
-    }
-
-
-    stopWorkHandler(event) {
-        const apiUrl = "/api/user/projects/091be765-7493-426f-8203-be611ab3ea13/logEnd"
-        let body = { schemaVersion: "2.0" }
-
-        fetch(apiUrl, {
-            body: JSON.stringify(body),
-            method: 'POST',
-        })
-            .then(
-                (result) => {
-                    this.setState({
-                        workStarted: false,
-                    });
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    this.props.loggedInHandler(false)
-                    this.setState({
-                        loggedIn: false,
-                        error
-                    });
-                }
-            )
-
-        event.preventDefault();
-    }
-
 
     componentDidMount() {
 
@@ -206,7 +143,6 @@ class Tracker extends React.Component {
         this.props.workIndex.workIndex !== undefined ? this.buildIntervals(this.props.workIndex, true) : console.log('waiting to select project')
 
     }
-
 
     buildIntervals(result, isLoaded) {
         var groups = []
@@ -378,7 +314,7 @@ class Tracker extends React.Component {
                             //console.log(days.length)
                         }
                     }
-
+/*
                     var start = moment(new Date(c.start));
                     var end = moment(new Date(c.end));
                     let diff = end.diff(start) / 12000000
@@ -401,6 +337,7 @@ class Tracker extends React.Component {
                         hr = { creditTo: creditTo, ttl: newTtl }
                         hours.push(hr)
                     }
+                    */
 
                 }, this, id, creditTo, contributer);
 
@@ -503,7 +440,7 @@ class Tracker extends React.Component {
                                     {projects()}
                                     <div className="row pt-6">
                                         <div className="col-md-2">
-                                            <button id="startWork" className={this.state.workStarted === false ? "btn btn-primary float-left my-2" : "btn btn-primary float-left my-2 btn-disable"} onClick={this.startWorkHandler}>Start Work</button>
+                                            <button id="startWork" className={this.props.workStarted === false ? "btn btn-primary float-left my-2" : "btn btn-primary float-left my-2 btn-disable"} onClick={this.props.startWorkHandler}>Start Work</button>
                                             {/* to do make component*/}
                                             <div id="startModal" className="action-modal">
                                                 <div className="action-modal-content container">
@@ -526,7 +463,7 @@ class Tracker extends React.Component {
                                         </div>
                                         <div className="col-md-10">
 
-                                            <button id="stopWork" className={this.state.workStarted === false ? "btn btn-primary float-right my-2 btn-disable" : "btn btn-primary float-right my-2"} onClick={this.stopWorkHandler}>Stop Work</button>
+                                            <button id="stopWork" className={this.props.workStarted === false ? "btn btn-primary float-right my-2 btn-disable" : "btn btn-primary float-right my-2"} onClick={this.props.stopWorkHandler}>Stop Work</button>
                                         </div>
                                         <div id="stopModal" className="action-modal">
                                             <div className="action-modal-content container">

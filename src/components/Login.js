@@ -26,6 +26,7 @@ class Login extends React.Component {
             body: JSON.stringify(body),
             method: 'POST',
         })
+            .then(response => console.log(response))
             .then(
                 (result) => {
                     this.props.loggedInHandler(true)
