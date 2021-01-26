@@ -1,0 +1,326 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Project Parts</title>
+    <meta name="description" content="Project Overview">
+    <meta name="author" content="SitePoint">
+
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+
+
+    <div class="container-fluid">
+
+        <div class="row tabs pt-3">
+
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-10">
+                <h3>Projects</h3>
+            </div>
+        </div>
+        <!-- New Project form-->
+        <section id="addProject">
+
+            <div class="row pt-3">
+                <div class="col-md-4">
+                    <span class="float-right">Project Name</span>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="projectName" name="projectName" />
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-md-4">
+                    <span class="float-right">Undepreciated Period ( Months )</span>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="undepreciatedPeriod" name="undepreciatedPeriod" />
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-md-4">
+                    <span class="float-right">Depreciation Duration ( Months )</span>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" id="depreciationDuration" name="depreciationDuration" />
+                </div>
+            </div>
+
+            <div class="row pt-3 pb-3">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-10">
+                    <button class="btn btn-sm btn-primary lift ml-auto">Add Project</button>
+                </div>
+            </div>
+
+        </section>
+
+        <section id="projects">
+            <!--header-->
+            <div class="row pt-3 font-weight-bold">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Project
+                </div>
+                <div class="col-md-2">
+                    Undepreciated Period
+                </div>
+                <div class="col-md-2">
+                    Depreciation Duration
+                </div>
+                <div class="col-md-2">
+                    Associates
+                </div>
+            </div>
+            <!-- map projects to these examples-->
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    My First Project
+                </div>
+                <div class="col-md-2">
+                    3 months
+                </div>
+                <div class="col-md-2">
+                    6 months
+                </div>
+                <div class="col-md-2">
+                    <a href="">View/Add Associates</a>
+                </div>
+            </div>
+            <div class="row pt-3 pb-2">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    My Second Project
+                </div>
+                <div class="col-md-2">
+                    9 months
+                </div>
+                <div class="col-md-2">
+                    4 months
+                </div>
+                <div class="col-md-2">
+                    <a href="">View/Add Associates</a>
+                </div>
+            </div>
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    My Third Project
+                </div>
+                <div class="col-md-2">
+                    3 months
+                </div>
+                <div class="col-md-2">
+                    7 months
+                </div>
+                <div class="col-md-2">
+                    <a href="">View/Add Associates</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="associates">
+            <div class="row pt-3 font-weight-bold">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Associate
+                </div>
+                <div class="col-md-2">
+                    Joined
+                </div>
+                <div class="col-md-2">
+                    Hrs / %
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Freuline Fred
+                </div>
+                <div class="col-md-2">
+                    Oct 2020
+                </div>
+                <div class="col-md-2">
+                    24hrs / 2.4%
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Goobie Works A Lot
+                </div>
+                <div class="col-md-2">
+                    Jan 2020
+                </div>
+                <div class="col-md-2">
+                    500 / 50%
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Average Fella
+                </div>
+                <div class="col-md-2">
+                    May 2020
+                </div>
+                <div class="col-md-2">
+                    250 hrs / 25%
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row pt-3 pb-2 stripe">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Cool Kid
+                </div>
+                <div class="col-md-2">
+                    April 2020
+                </div>
+                <div class="col-md-2">
+                    226 hrs 22.6%
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+        </section>
+
+        <section id="projectOverview pt-3">
+            <!--header-->
+            <div class="row pt-3 font-weight-bold">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2 ">
+                    My First Project
+                </div>
+                <div class="col-md-2">
+                    Undepreciated / x months
+                </div>
+                <div class="col-md-4">
+                    Undepreciated Period / X Months
+                </div>
+                <div class="col-md-2">
+
+                </div>
+             </div>
+             <!-- Map payouts -->
+             <div class="row font-weight-bold">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-4">
+                    Payments
+                </div>
+                <div class="col-md-6">
+
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-2">
+                    Oct 20 2020
+                </div>
+                <div class="col-md-2">
+                    100 zec
+                </div>
+                <div class="col-md-2">
+                    Acme PaidUsRight
+                </div>
+                <div class="col-md-4">
+                </div>
+            </div>
+            <!-- map payout creditTos-->
+            <div class="row pt-3">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-2">
+                    Freuline Fred
+                </div>
+                <div class="col-md-2">
+                    2.4 zec
+                </div>
+                <div class="col-md-2">
+                    2.4 %
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-2">
+                    Goobie Works A Lot
+                </div>
+                <div class="col-md-2">
+                    50 zec
+                </div>
+                <div class="col-md-2">
+                    50 %
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div> <div class="row pt-3">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-2">
+                    Average Fella
+                </div>
+                <div class="col-md-2">
+                    25 zec
+                </div>
+                <div class="col-md-2">
+                    25 %
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div> <div class="row pt-3">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-2">
+                    Cool Kid
+                </div>
+                <div class="col-md-2">
+                    24.6 zec
+                </div>
+                <div class="col-md-2">
+                    24.6 %
+                </div>
+                <div class="col-md-2">
+                </div>
+            </div>
+            
+        </section>
+    </div>
+</body>
+
+</html>
